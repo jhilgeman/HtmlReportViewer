@@ -1,0 +1,90 @@
+﻿<Window x:Class="HtmlReportViewer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:wv="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+        xmlns:local="clr-namespace:HtmlReportViewer"
+        mc:Ignorable="d"
+        Title="HTML Report Viewer" Height="450" Width="800">
+    
+    <Window.Resources>
+        <ResourceDictionary>
+            <Style TargetType="GroupBox">
+                <Setter Property="Margin" Value="3" />
+            </Style>
+            <Style TargetType="Button">
+                <Setter Property="Margin" Value="3" />
+                <Setter Property="Padding" Value="8,0,8,0" />
+            </Style>
+            <Style TargetType="TextBox">
+                <Setter Property="Margin" Value="3" />
+            </Style>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Window.DataContext>
+        <local:ViewModel />
+    </Window.DataContext>
+        
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="3.5*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Path / Open -->
+        <Border Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2">
+            <GroupBox Header="Folder Selection">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" Content="Folder:" />
+                    <TextBox Grid.Column="1" IsReadOnly="True" Text="{Binding Folder}" />
+                    <Button Grid.Column="2" Content="..." Name="btnOpenFolder" Click="btnOpenFolder_Click" />
+                </Grid>
+            </GroupBox>
+        </Border>
+
+        <!-- File List / Search -->
+        <Border Grid.Column="0" Grid.Row="1">
+            <GroupBox Header="{Binding FilesLabel}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="1*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Label Content="Filter:" Grid.Column="0" Grid.Row="0" />
+                    <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}" />
+                    <ListView Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" 
+                              ItemsSource="{Binding FilteredFiles}" 
+                              SelectedItem="{Binding SelectedFile}"
+                              DisplayMemberPath="Name" 
+                              MouseDoubleClick="ListView_MouseDoubleClick">
+                        
+                    </ListView>
+                </Grid>
+            </GroupBox>
+        </Border>
+
+        <!-- Browser -->
+        <Border Grid.Column="1" Grid.Row="1">
+            <GroupBox Header="Browser">
+                <wv:WebView2 Name="webViewBrowser" />
+            </GroupBox>
+        </Border>
+
+    </Grid>
+</Window>
